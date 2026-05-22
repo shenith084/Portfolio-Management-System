@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -13,21 +14,26 @@ const navLinks = [
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
-    <nav className="w-full bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-indigo-600">
-          MyPortfolio
+    <header className="navbar">
+      <div className="navbar-inner">
+        {/* Logo */}
+        <Link href="/" id="navbar-logo" className="navbar-logo">
+          <span className="logo-bracket">&lt;</span>
+          S<span className="logo-accent">C</span>
+          <span className="logo-bracket">/&gt;</span>
         </Link>
 
-        {/* Desktop Links */}
-        <ul className="hidden md:flex gap-6">
+        {/* Desktop Nav */}
+        <ul className="navbar-links">
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-gray-600 hover:text-indigo-600 transition-colors font-medium"
+                id={`nav-${link.label.toLowerCase()}`}
+                className={`nav-link${pathname === link.href ? ' active' : ''}`}
               >
                 {link.label}
               </Link>
@@ -35,38 +41,48 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Mobile Hamburger */}
+        {/* Desktop CTA */}
+        <Link href="/contact" id="navbar-hire" className="navbar-cta">
+          Hire Me
+        </Link>
+
+        {/* Mobile Toggle */}
         <button
           id="navbar-toggle"
-          className="md:hidden text-gray-600"
+          className="navbar-mobile-toggle"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
+          aria-expanded={menuOpen}
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d={menuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} />
-          </svg>
+          <span className={`toggle-bar${menuOpen ? ' open-1' : ''}`} />
+          <span className={`toggle-bar${menuOpen ? ' open-2' : ''}`} />
+          <span className={`toggle-bar${menuOpen ? ' open-3' : ''}`} />
         </button>
       </div>
 
       {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-white border-t px-4 pb-4">
-          <ul className="flex flex-col gap-3 mt-2">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="block text-gray-600 hover:text-indigo-600 font-medium"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </nav>
+      <div className={`mobile-menu${menuOpen ? ' open' : ''}`}>
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            id={`nav-mobile-${link.label.toLowerCase()}`}
+            className={`mobile-nav-link${pathname === link.href ? ' active' : ''}`}
+            onClick={() => setMenuOpen(false)}
+          >
+            {link.label}
+          </Link>
+        ))}
+        <Link
+          href="/contact"
+          id="nav-mobile-hire"
+          className="btn-primary"
+          style={{ marginTop: '8px', textAlign: 'center', justifyContent: 'center' }}
+          onClick={() => setMenuOpen(false)}
+        >
+          Hire Me
+        </Link>
+      </div>
+    </header>
   );
 }
