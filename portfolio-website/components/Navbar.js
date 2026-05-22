@@ -19,6 +19,7 @@ export default function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar-inner">
+
         {/* Logo */}
         <Link href="/" id="navbar-logo" className="navbar-logo">
           <span className="logo-bracket">&lt;</span>
@@ -28,17 +29,21 @@ export default function Navbar() {
 
         {/* Desktop Nav */}
         <ul className="navbar-links">
-          {navLinks.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                id={`nav-${link.label.toLowerCase()}`}
-                className={`nav-link${pathname === link.href ? ' active' : ''}`}
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  id={`nav-${link.label.toLowerCase()}`}
+                  className={`nav-link${isActive ? ' active' : ''}`}
+                >
+                  {link.label}
+                  <span className="nav-underline" aria-hidden="true" />
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         {/* Desktop CTA */}
@@ -49,14 +54,14 @@ export default function Navbar() {
         {/* Mobile Toggle */}
         <button
           id="navbar-toggle"
-          className="navbar-mobile-toggle"
+          className={`navbar-mobile-toggle${menuOpen ? ' is-open' : ''}`}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
           aria-expanded={menuOpen}
         >
-          <span className={`toggle-bar${menuOpen ? ' open-1' : ''}`} />
-          <span className={`toggle-bar${menuOpen ? ' open-2' : ''}`} />
-          <span className={`toggle-bar${menuOpen ? ' open-3' : ''}`} />
+          <span className="toggle-bar" />
+          <span className="toggle-bar" />
+          <span className="toggle-bar" />
         </button>
       </div>
 
