@@ -47,6 +47,14 @@ const projectsData = [
       'Developed a job marketplace web platform using PHP and MySQL enabling clients to post jobs and freelancers to find opportunities.'
     ],
     link: '#'
+  },
+  {
+    title: 'Cafe Management System',
+    date: 'Jan 2023',
+    description: [
+      'Automated billing and inventory control using an HTML, Bootstrap, JS, and CSS web application to improve reporting efficiency and operational security'
+    ],
+    link: '#'
   }
 ];
 
@@ -67,23 +75,23 @@ export default function ProjectsPage() {
         </div>
 
         {/* Projects Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
           {projectsData.map((project, i) => (
-            <div key={i} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ marginBottom: '16px' }}>
-                <h2 className="heading-3" style={{ fontSize: '1.25rem', lineHeight: '1.4', margin: 0 }}>{project.title}</h2>
+            <div key={i} className="card" style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ marginBottom: '12px' }}>
+                <h2 className="heading-3" style={{ fontSize: '1.1rem', lineHeight: '1.4', margin: 0 }}>{project.title}</h2>
               </div>
-              <p className="text-teal" style={{ fontWeight: '600', fontSize: '0.9rem', marginBottom: '16px' }}>{project.date}</p>
-              <ul style={{ listStyleType: 'none', display: 'flex', flexDirection: 'column', gap: '12px', flexGrow: 1, marginBottom: '24px', paddingLeft: '4px' }}>
+              <p className="text-teal" style={{ fontWeight: '600', fontSize: '0.8rem', marginBottom: '12px' }}>{project.date}</p>
+              <ul style={{ listStyleType: 'none', display: 'flex', flexDirection: 'column', gap: '10px', flexGrow: 1, marginBottom: '20px', paddingLeft: '4px' }}>
                 {project.description.map((desc, idx) => (
-                  <li key={idx} className="body-text" style={{ fontSize: '0.95rem', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                  <li key={idx} className="body-text" style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'flex-start', gap: '8px', lineHeight: '1.5' }}>
                     <span style={{ color: 'var(--color-teal)', marginTop: '2px' }}>▹</span>
                     <span>{desc}</span>
                   </li>
                 ))}
               </ul>
               <div>
-                <a href={project.link} className="btn-outline" style={{ padding: '8px 16px', fontSize: '0.85rem' }} target="_blank" rel="noopener noreferrer">
+                <a href={project.link} className="btn-outline" style={{ padding: '6px 14px', fontSize: '0.8rem' }} target="_blank" rel="noopener noreferrer">
                   Repository Link
                 </a>
               </div>

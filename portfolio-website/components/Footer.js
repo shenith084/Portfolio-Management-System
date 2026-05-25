@@ -24,7 +24,7 @@ export default function Footer() {
             </div>
             <p className="footer-brand-desc">
               Shenith Chanidu Rashmika<br />
-              BICT(Hons) Student &amp; AI/ML Enthusiast.<br />
+              BICT(Hons) Student &amp; AI/ML Engineer<br />
               Building the future, one line at a time.
             </p>
           </div>

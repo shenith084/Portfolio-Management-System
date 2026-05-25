@@ -1,13 +1,60 @@
+import connectDB from '@/lib/mongodb';
+import Contact from '@/models/Contact';
+import MessageTable from '@/components/MessageTable';
+import { cookies } from 'next/headers';
+import { jwtVerify } from 'jose';
+import { redirect } from 'next/navigation';
+
 export const metadata = {
   title: 'Admin | Messages',
   description: 'View and manage all contact form messages.',
 };
 
-export default function MessagesPage() {
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+
+async function getMessages() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('admin_token')?.value;
+    if (!token) redirect('/login');
+    await jwtVerify(token, JWT_SECRET);
+
+    await connectDB();
+    const messages = await Contact.find({}).sort({ createdAt: -1 }).lean();
+    // Serialize Mongoose documents to plain JS objects
+    return messages.map((m) => ({
+      ...m,
+      _id: m._id.toString(),
+      createdAt: m.createdAt.toISOString(),
+      updatedAt: m.updatedAt.toISOString(),
+    }));
+  } catch {
+    redirect('/login');
+  }
+}
+
+export default async function MessagesPage() {
+  const messages = await getMessages();
+
   return (
-    <main className="p-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Messages</h1>
-      <p className="text-gray-500">MessageTable component goes here.</p>
-    </main>
+    <div>
+      {/* Page header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
+        <div>
+          <h1 className="admin-heading-1">Messages</h1>
+          <p className="admin-body-text" style={{ marginTop: '6px' }}>
+            All contact form submissions from your portfolio website.
+          </p>
+        </div>
+        <span className="admin-badge" id="messages-count-badge">
+          ✉️ {messages.length} {messages.length === 1 ? 'message' : 'messages'}
+        </span>
+      </div>
+
+      {/* Messages Table */}
+      <div className="admin-card" style={{ padding: '0', overflow: 'hidden' }}>
+        <MessageTable initialMessages={messages} />
+      </div>
+    </div>
   );
 }

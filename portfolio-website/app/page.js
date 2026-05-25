@@ -58,8 +58,8 @@ export default function HomePage() {
               {[
                 { num: '10+', label: 'Projects Built', icon: '🚀' },
                 { num: '8+', label: 'Technologies', icon: '⚙️' },
-                { num: '2+', label: 'Years Learning', icon: '📚' },
-                { num: 'BSc', label: 'BICT (Hons)', icon: '🎓' },
+                { num: '4+', label: 'Years Learning', icon: '📚' },
+                { num: 'RUSL', label: 'BICT (Hons)', icon: '🎓' },
               ].map((s) => (
                 <div className="stat-card" key={s.label} id={`stat-${s.label.replace(/\s+/g, '-').toLowerCase()}`}>
                   <span className="stat-icon">{s.icon}</span>

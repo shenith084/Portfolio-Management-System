@@ -1,45 +1,71 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
-  { href: '/dashboard/messages', label: 'Messages', icon: '✉️' },
+  { href: '/dashboard', label: 'Dashboard', icon: '🏠', exact: true },
+  { href: '/dashboard/messages', label: 'Messages', icon: '✉️', exact: false },
 ];
 
 export default function Sidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const isActive = (item) =>
+    item.exact ? pathname === item.href : pathname.startsWith(item.href);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await fetch('/api/logout', { method: 'POST' });
+    } finally {
+      router.push('/login');
+    }
+  };
+
   return (
-    <aside className="w-64 min-h-screen bg-gray-900 text-white flex flex-col py-8 px-4 fixed left-0 top-0">
-      <div className="mb-10">
-        <h2 className="text-xl font-bold text-indigo-400">Admin Panel</h2>
-        <p className="text-gray-500 text-xs mt-1">Portfolio Management</p>
+    <aside className="admin-sidebar">
+      {/* Brand */}
+      <div className="sidebar-brand">
+        <div className="sidebar-brand-logo">
+          <span className="login-logo-bracket">&lt;</span>
+          S<span className="login-logo-accent">C</span>
+          <span className="login-logo-bracket">/&gt;</span>
+        </div>
+        <p className="sidebar-brand-sub">Admin Panel</p>
       </div>
 
-      <nav className="flex-1">
-        <ul className="space-y-2">
-          {navItems.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-300 hover:bg-indigo-600 hover:text-white transition-colors font-medium"
-              >
-                <span>{item.icon}</span>
-                <span>{item.label}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+      {/* Navigation */}
+      <nav className="sidebar-nav" role="navigation" aria-label="Admin navigation">
+        <p className="sidebar-section-label">Main Menu</p>
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            id={`sidebar-${item.label.toLowerCase()}`}
+            className={`sidebar-nav-link${isActive(item) ? ' active' : ''}`}
+          >
+            <span className="sidebar-nav-icon" aria-hidden="true">{item.icon}</span>
+            {item.label}
+          </Link>
+        ))}
       </nav>
 
-      <div className="mt-auto">
-        <form action="/api/logout" method="POST">
-          <button
-            id="sidebar-logout"
-            type="submit"
-            className="w-full text-left flex items-center gap-3 px-4 py-2 rounded-lg text-gray-400 hover:bg-red-600 hover:text-white transition-colors font-medium"
-          >
-            <span>🚪</span>
-            <span>Logout</span>
-          </button>
-        </form>
+      {/* Logout */}
+      <div className="sidebar-footer">
+        <button
+          id="sidebar-logout"
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="sidebar-logout-btn"
+          aria-label="Logout from admin panel"
+        >
+          <span aria-hidden="true">{loggingOut ? '⏳' : '🚪'}</span>
+          {loggingOut ? 'Logging out...' : 'Logout'}
+        </button>
       </div>
     </aside>
   );
