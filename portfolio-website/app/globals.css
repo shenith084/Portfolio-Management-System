@@ -828,7 +828,7 @@ body {
 ═══════════════════════════════════════════════ */
 .skills-category-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 24px;
 }
 .skill-category-card {
@@ -862,7 +862,7 @@ body {
 ═══════════════════════════════════════════════ */
 .projects-grid-page {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
   gap: 24px;
 }
 .project-card {

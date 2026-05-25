@@ -270,6 +270,22 @@ html { scroll-behavior: smooth; height: 100%; }
   .admin-content { padding: 24px 20px; }
 }
 
+/* Sidebar Overlay */
+.sidebar-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(4, 15, 25, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 45;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.sidebar-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* ═══════════════════════════════════════════════
    SIDEBAR
 ═══════════════════════════════════════════════ */
@@ -287,6 +303,15 @@ html { scroll-behavior: smooth; height: 100%; }
   z-index: 50;
   padding: 0;
   overflow-y: auto;
+  transition: transform 0.3s ease;
+}
+@media (max-width: 900px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
 }
 .sidebar-brand {
   padding: 24px 20px 20px;
@@ -386,6 +411,35 @@ html { scroll-behavior: smooth; height: 100%; }
   top: 0;
   z-index: 40;
   backdrop-filter: blur(10px);
+}
+@media (max-width: 900px) {
+  .admin-header {
+    padding: 0 20px;
+  }
+}
+.admin-mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 34px;
+  height: 34px;
+  padding: 6px;
+  border-radius: 6px;
+  background: rgba(111,209,215,0.06);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  margin-right: 12px;
+}
+@media (max-width: 900px) {
+  .admin-mobile-menu-btn { display: flex; }
+}
+.admin-mobile-menu-btn .toggle-bar {
+  display: block;
+  height: 2px;
+  width: 100%;
+  border-radius: 1px;
+  background: var(--color-teal);
 }
 .admin-header-title {
   font-size: 1rem;

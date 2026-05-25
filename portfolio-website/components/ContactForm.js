@@ -20,8 +20,8 @@ export default function ContactForm() {
     }
     if (!formData.message.trim()) {
       newErrors.message = 'Message is required.';
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters.';
+    } else if (formData.message.trim().length < 5) {
+      newErrors.message = 'Message must be at least 5 characters.';
     }
     return newErrors;
   };

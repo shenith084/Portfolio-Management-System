@@ -64,7 +64,7 @@ Portfolio-Management-System/
     │       ├── logout/route.js  # POST  — Clear JWT cookie
     │       └── messages/route.js# GET   — Fetch messages (auth required)
     │                             # DELETE— Delete message (auth required)
-    ├── middleware.js             # Protect all /dashboard/* routes (JWT)
+    ├── proxy.js                  # Protect all /dashboard/* routes (JWT)
     ├── components/
     │   ├── Sidebar.js           # Branded sidebar with active links + logout
     │   ├── Header.js            # Admin header with user avatar
@@ -166,6 +166,21 @@ Visitor → Portfolio Website (port 3000)
 
 - Admin passwords are hashed with **bcrypt** (salt rounds: 12)
 - JWT tokens are stored as **HTTP-only cookies** (not accessible via JavaScript)
-- All `/dashboard/*` routes are protected by **Next.js middleware** — unauthenticated users are redirected to `/login`
+- All `/dashboard/*` routes are protected by **Next.js proxy** (formerly middleware) — unauthenticated users are redirected to `/login`
 - API routes independently verify the JWT for double protection
 - Cookies use `sameSite: strict` and `secure: true` in production
+
+---
+
+## Troubleshooting
+
+### MongoDB Atlas Connection Issues
+
+If you see an error like `MongooseServerSelectionError: Could not connect to any servers in your MongoDB Atlas cluster`, or if forms fail to submit with a generic error (e.g. `Something went wrong.`), it is likely because your current IP address is not whitelisted in MongoDB Atlas.
+
+**To fix this:**
+1. Log into your [MongoDB Atlas Dashboard](https://cloud.mongodb.com/).
+2. Navigate to **Security** > **Network Access** in the left sidebar.
+3. Click **+ Add IP Address**.
+4. Choose **Add Current IP Address** and click **Confirm**.
+5. Wait for the status to turn "Active" and try again.

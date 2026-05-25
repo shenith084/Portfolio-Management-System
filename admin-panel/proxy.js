@@ -6,7 +6,7 @@ const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 // Routes that require authentication
 const PROTECTED_PATHS = ['/dashboard'];
 
-export async function middleware(request) {
+export async function proxy(request) {
   const { pathname } = request.nextUrl;
 
   // Check if the path needs protection

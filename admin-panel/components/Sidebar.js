@@ -9,7 +9,7 @@ const navItems = [
   { href: '/dashboard/messages', label: 'Messages', icon: '✉️', exact: false },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const pathname = usePathname();
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
@@ -27,7 +27,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="admin-sidebar">
+    <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
       {/* Brand */}
       <div className="sidebar-brand">
         <div className="sidebar-brand-logo">
@@ -47,6 +47,7 @@ export default function Sidebar() {
             href={item.href}
             id={`sidebar-${item.label.toLowerCase()}`}
             className={`sidebar-nav-link${isActive(item) ? ' active' : ''}`}
+            onClick={onClose}
           >
             <span className="sidebar-nav-icon" aria-hidden="true">{item.icon}</span>
             {item.label}
