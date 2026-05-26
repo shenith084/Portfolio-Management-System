@@ -1,11 +1,22 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Sidebar from './Sidebar';
 import Header from './Header';
 
 export default function DashboardShell({ children }) {
+  const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Determine title and icon based on route
+  let headerTitle = 'Dashboard';
+  let headerIcon = '🏠';
+
+  if (pathname.startsWith('/dashboard/messages')) {
+    headerTitle = 'Messages';
+    headerIcon = '✉️';
+  }
 
   return (
     <div className={`admin-shell ${sidebarOpen ? 'sidebar-open' : ''}`}>
@@ -19,7 +30,11 @@ export default function DashboardShell({ children }) {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="admin-main-area">
-        <Header onMenuClick={() => setSidebarOpen(true)} />
+        <Header 
+          title={headerTitle} 
+          icon={headerIcon} 
+          onMenuClick={() => setSidebarOpen(true)} 
+        />
 
         <main className="admin-content" id="admin-main-content">
           {children}

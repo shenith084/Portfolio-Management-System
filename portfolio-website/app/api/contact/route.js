@@ -1,5 +1,4 @@
-import connectDB from '@/lib/mongodb';
-import Contact from '@/models/Contact';
+import { connectDB, createMessage } from '@/lib/dbService';
 
 export async function POST(request) {
   try {
@@ -15,7 +14,7 @@ export async function POST(request) {
       );
     }
 
-    const contact = await Contact.create({ name, email, phone, message });
+    const contact = await createMessage({ name, email, phone, message });
 
     return Response.json(
       { success: true, message: 'Message sent successfully!', data: contact },

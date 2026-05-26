@@ -1,5 +1,4 @@
-import connectDB from '@/lib/mongodb';
-import Admin from '@/models/Admin';
+import { connectDB, getAdminByEmail, comparePassword } from '@/lib/dbService';
 import { SignJWT } from 'jose';
 import { cookies } from 'next/headers';
 
@@ -18,7 +17,7 @@ export async function POST(request) {
       );
     }
 
-    const admin = await Admin.findOne({ email });
+    const admin = await getAdminByEmail(email);
     if (!admin) {
       return Response.json(
         { success: false, error: 'Invalid credentials.' },
@@ -26,7 +25,7 @@ export async function POST(request) {
       );
     }
 
-    const isValid = await admin.comparePassword(password);
+    const isValid = await comparePassword(admin, password);
     if (!isValid) {
       return Response.json(
         { success: false, error: 'Invalid credentials.' },

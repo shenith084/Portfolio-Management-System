@@ -1,5 +1,4 @@
-import connectDB from '@/lib/mongodb';
-import Contact from '@/models/Contact';
+import { connectDB, getAllMessages } from '@/lib/dbService';
 import MessageTable from '@/components/MessageTable';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
@@ -20,14 +19,7 @@ async function getMessages() {
     await jwtVerify(token, JWT_SECRET);
 
     await connectDB();
-    const messages = await Contact.find({}).sort({ createdAt: -1 }).lean();
-    // Serialize Mongoose documents to plain JS objects
-    return messages.map((m) => ({
-      ...m,
-      _id: m._id.toString(),
-      createdAt: m.createdAt.toISOString(),
-      updatedAt: m.updatedAt.toISOString(),
-    }));
+    return await getAllMessages();
   } catch {
     redirect('/login');
   }

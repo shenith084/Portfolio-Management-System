@@ -1,5 +1,4 @@
-import connectDB from '@/lib/mongodb';
-import Contact from '@/models/Contact';
+import { connectDB, countMessages, getRecentMessages } from '@/lib/dbService';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
@@ -20,8 +19,8 @@ async function getStats() {
     await jwtVerify(token, JWT_SECRET);
 
     await connectDB();
-    const totalMessages = await Contact.countDocuments();
-    const recentMessages = await Contact.find({}).sort({ createdAt: -1 }).limit(3);
+    const totalMessages = await countMessages();
+    const recentMessages = await getRecentMessages(3);
     return { totalMessages, recentMessages };
   } catch {
     redirect('/login');
