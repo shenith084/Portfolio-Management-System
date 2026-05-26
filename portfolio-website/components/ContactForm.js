@@ -66,40 +66,43 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} id="contact-form" noValidate>
-      {/* Full Name */}
-      <div className="form-group">
-        <label htmlFor="contact-name" className="form-label">
-          Full Name <span style={{ color: 'var(--color-mint)' }}>*</span>
-        </label>
-        <input
-          id="contact-name"
-          name="name"
-          type="text"
-          value={formData.name}
-          onChange={handleChange}
-          className="form-input"
-          placeholder="e.g. John Smith"
-          aria-invalid={!!errors.name}
-        />
-        {errors.name && <p className="form-field-error">{errors.name}</p>}
-      </div>
+      {/* Name and Email side-by-side */}
+      <div className="form-row-grid">
+        {/* Full Name */}
+        <div className="form-group">
+          <label htmlFor="contact-name" className="form-label">
+            Full Name <span style={{ color: 'var(--color-mint)' }}>*</span>
+          </label>
+          <input
+            id="contact-name"
+            name="name"
+            type="text"
+            value={formData.name}
+            onChange={handleChange}
+            className="form-input"
+            placeholder="e.g. John Smith"
+            aria-invalid={!!errors.name}
+          />
+          {errors.name && <p className="form-field-error">{errors.name}</p>}
+        </div>
 
-      {/* Email */}
-      <div className="form-group">
-        <label htmlFor="contact-email" className="form-label">
-          Email Address <span style={{ color: 'var(--color-mint)' }}>*</span>
-        </label>
-        <input
-          id="contact-email"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          className="form-input"
-          placeholder="you@example.com"
-          aria-invalid={!!errors.email}
-        />
-        {errors.email && <p className="form-field-error">{errors.email}</p>}
+        {/* Email */}
+        <div className="form-group">
+          <label htmlFor="contact-email" className="form-label">
+            Email Address <span style={{ color: 'var(--color-mint)' }}>*</span>
+          </label>
+          <input
+            id="contact-email"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="form-input"
+            placeholder="you@example.com"
+            aria-invalid={!!errors.email}
+          />
+          {errors.email && <p className="form-field-error">{errors.email}</p>}
+        </div>
       </div>
 
       {/* Phone */}
@@ -128,7 +131,7 @@ export default function ContactForm() {
         <textarea
           id="contact-message"
           name="message"
-          rows={5}
+          rows={4}
           value={formData.message}
           onChange={handleChange}
           className="form-textarea"
