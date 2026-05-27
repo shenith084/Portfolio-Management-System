@@ -16,6 +16,12 @@ export default function DashboardShell({ children }) {
   if (pathname.startsWith('/dashboard/messages')) {
     headerTitle = 'Messages';
     headerIcon = '✉️';
+  } else if (pathname.startsWith('/dashboard/projects')) {
+    headerTitle = 'Projects';
+    headerIcon = '🚀';
+  } else if (pathname.startsWith('/dashboard/skills')) {
+    headerTitle = 'Skills';
+    headerIcon = '⚙️';
   }
 
   return (

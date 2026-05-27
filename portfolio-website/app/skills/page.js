@@ -1,77 +1,11 @@
+import { connectDB, getSkillCategories } from '@/lib/dbService';
+
 export const metadata = {
   title: 'Portfolio | Skills',
   description: 'A look at my technical skills, tools, and technologies — from web development to AI/ML.',
 };
 
-const skillCategories = [
-  {
-    title: 'Frontend Development',
-    icon: '🎨',
-    skills: [
-      { name: 'HTML & CSS', level: 'Advanced', pct: 92 },
-      { name: 'JavaScript (ES6+)', level: 'Advanced', pct: 88 },
-      { name: 'React.js', level: 'Advanced', pct: 85 },
-      { name: 'Next.js', level: 'Intermediate', pct: 80 },
-      { name: 'Tailwind CSS', level: 'Advanced', pct: 85 },
-      { name: 'Bootstrap', level: 'Advanced', pct: 88 },
-    ],
-  },
-  {
-    title: 'Backend Development',
-    icon: '⚙️',
-    skills: [
-      { name: 'Node.js', level: 'Intermediate', pct: 78 },
-      { name: 'Next.js API Routes', level: 'Intermediate', pct: 76 },
-      { name: 'PHP', level: 'Intermediate', pct: 72 },
-      { name: 'Laravel', level: 'Intermediate', pct: 70 },
-      { name: 'Flask (Python)', level: 'Intermediate', pct: 75 },
-      { name: 'REST API Design', level: 'Intermediate', pct: 78 },
-    ],
-  },
-  {
-    title: 'AI / Machine Learning',
-    icon: '🤖',
-    skills: [
-      { name: 'Python', level: 'Advanced', pct: 90 },
-      { name: 'TensorFlow / Keras', level: 'Intermediate', pct: 78 },
-      { name: 'scikit-learn', level: 'Intermediate', pct: 75 },
-      { name: 'Computer Vision (CV2)', level: 'Intermediate', pct: 73 },
-      { name: 'Pandas & NumPy', level: 'Advanced', pct: 85 },
-      { name: 'Matplotlib / Seaborn', level: 'Advanced', pct: 82 },
-    ],
-  },
-  {
-    title: 'Database & Cloud',
-    icon: '🗄️',
-    skills: [
-      { name: 'MongoDB', level: 'Intermediate', pct: 76 },
-      { name: 'MySQL', level: 'Advanced', pct: 82 },
-      { name: 'Mongoose ODM', level: 'Intermediate', pct: 74 },
-      { name: 'Firebase', level: 'Beginner', pct: 55 },
-    ],
-  },
-  {
-    title: 'Tools & DevOps',
-    icon: '🛠️',
-    skills: [
-      { name: 'Git & GitHub', level: 'Advanced', pct: 88 },
-      { name: 'VS Code', level: 'Advanced', pct: 95 },
-      { name: 'Jupyter Notebook', level: 'Advanced', pct: 90 },
-      { name: 'Postman', level: 'Intermediate', pct: 78 },
-      { name: 'Docker (Basics)', level: 'Beginner', pct: 50 },
-    ],
-  },
-  {
-    title: 'Soft Skills',
-    icon: '💡',
-    skills: [
-      { name: 'Problem Solving', level: 'Advanced', pct: 90 },
-      { name: 'Team Collaboration', level: 'Advanced', pct: 88 },
-      { name: 'Project Leadership', level: 'Intermediate', pct: 80 },
-      { name: 'Technical Writing', level: 'Intermediate', pct: 76 },
-    ],
-  },
-];
+export const dynamic = 'force-dynamic';
 
 const levelColors = {
   Advanced:     'var(--color-mint)',
@@ -79,7 +13,15 @@ const levelColors = {
   Beginner:     'var(--color-steel)',
 };
 
-export default function SkillsPage() {
+export default async function SkillsPage() {
+  let skillCategories = [];
+  try {
+    await connectDB();
+    skillCategories = await getSkillCategories();
+  } catch {
+    skillCategories = [];
+  }
+
   return (
     <main className="page-section">
       <div className="page-container">
@@ -107,37 +49,50 @@ export default function SkillsPage() {
         </div>
 
         {/* Skills Grid */}
-        <div className="skills-category-grid">
-          {skillCategories.map((cat) => (
-            <div key={cat.title} className="skill-category-card">
-              <h2 className="skill-category-title">
-                <span aria-hidden="true">{cat.icon}</span>
-                {cat.title}
-              </h2>
-              <div className="skill-list">
-                {cat.skills.map((skill) => (
-                  <div key={skill.name} className="skill-row">
-                    <div className="skill-name-row">
-                      <span className="skill-name">{skill.name}</span>
-                      <span className="skill-level-label" style={{ color: levelColors[skill.level] }}>
-                        {skill.level}
-                      </span>
-                    </div>
-                    <div className="skill-bar" role="progressbar" aria-valuenow={skill.pct} aria-valuemin={0} aria-valuemax={100} aria-label={skill.name}>
+        {skillCategories.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)' }}>
+            <p style={{ fontSize: '1rem' }}>No skill data found. Check back soon!</p>
+          </div>
+        ) : (
+          <div className="skills-category-grid">
+            {skillCategories.map((cat) => (
+              <div key={cat._id} className="skill-category-card">
+                <h2 className="skill-category-title">
+                  <span aria-hidden="true">{cat.icon}</span>
+                  {cat.categoryTitle}
+                </h2>
+                <div className="skill-list">
+                  {cat.skills.map((skill, idx) => (
+                    <div key={idx} className="skill-row">
+                      <div className="skill-name-row">
+                        <span className="skill-name">{skill.name}</span>
+                        <span className="skill-level-label" style={{ color: levelColors[skill.level] }}>
+                          {skill.level}
+                        </span>
+                      </div>
                       <div
-                        className="skill-bar-inner"
-                        style={{
-                          width: `${skill.pct}%`,
-                          background: `linear-gradient(90deg, var(--color-steel), ${levelColors[skill.level]})`,
-                        }}
-                      />
+                        className="skill-bar"
+                        role="progressbar"
+                        aria-valuenow={skill.pct}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label={skill.name}
+                      >
+                        <div
+                          className="skill-bar-inner"
+                          style={{
+                            width: `${skill.pct}%`,
+                            background: `linear-gradient(90deg, var(--color-steel), ${levelColors[skill.level]})`,
+                          }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Currently Learning */}
         <div

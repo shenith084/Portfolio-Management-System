@@ -1,4 +1,4 @@
-import { connectDB, countMessages, getRecentMessages } from '@/lib/dbService';
+import { connectDB, countMessages, getRecentMessages, countProjects, countSkillCategories } from '@/lib/dbService';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
@@ -19,16 +19,20 @@ async function getStats() {
     await jwtVerify(token, JWT_SECRET);
 
     await connectDB();
-    const totalMessages = await countMessages();
-    const recentMessages = await getRecentMessages(3);
-    return { totalMessages, recentMessages };
+    const [totalMessages, recentMessages, totalProjects, totalSkillCategories] = await Promise.all([
+      countMessages(),
+      getRecentMessages(3),
+      countProjects(),
+      countSkillCategories(),
+    ]);
+    return { totalMessages, recentMessages, totalProjects, totalSkillCategories };
   } catch {
     redirect('/login');
   }
 }
 
 export default async function DashboardPage() {
-  const { totalMessages, recentMessages } = await getStats();
+  const { totalMessages, recentMessages, totalProjects, totalSkillCategories } = await getStats();
 
   return (
     <div>
@@ -48,9 +52,14 @@ export default async function DashboardPage() {
           <div className="stat-card-label">Total Messages</div>
         </div>
         <div className="stat-card">
-          <div className="stat-card-icon">📬</div>
-          <div className="stat-card-value">{recentMessages.length}</div>
-          <div className="stat-card-label">Recent (Last 3)</div>
+          <div className="stat-card-icon">🚀</div>
+          <div className="stat-card-value">{totalProjects}</div>
+          <div className="stat-card-label">Projects</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-card-icon">⚙️</div>
+          <div className="stat-card-value">{totalSkillCategories}</div>
+          <div className="stat-card-label">Skill Categories</div>
         </div>
         <div className="stat-card">
           <div className="stat-card-icon">🟢</div>
@@ -116,6 +125,14 @@ export default async function DashboardPage() {
           <Link href="/dashboard/messages" id="quick-messages" className="quick-link-tile">
             <span className="quick-link-icon">✉️</span>
             All Messages
+          </Link>
+          <Link href="/dashboard/projects" id="quick-projects" className="quick-link-tile">
+            <span className="quick-link-icon">🚀</span>
+            Manage Projects
+          </Link>
+          <Link href="/dashboard/skills" id="quick-skills" className="quick-link-tile">
+            <span className="quick-link-icon">⚙️</span>
+            Manage Skills
           </Link>
           <a
             href="http://localhost:3000"

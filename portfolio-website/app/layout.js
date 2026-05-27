@@ -23,6 +23,7 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         {/* Inter font loaded via link tag — avoids Tailwind v4 @import url() CSS parse error */}

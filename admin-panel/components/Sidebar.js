@@ -7,6 +7,8 @@ import { useState } from 'react';
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: '🏠', exact: true },
   { href: '/dashboard/messages', label: 'Messages', icon: '✉️', exact: false },
+  { href: '/dashboard/projects', label: 'Projects', icon: '🚀', exact: false },
+  { href: '/dashboard/skills', label: 'Skills', icon: '⚙️', exact: false },
 ];
 
 export default function Sidebar({ isOpen, onClose }) {
