@@ -172,15 +172,24 @@ Visitor → Portfolio Website (port 3000)
 
 ---
 
-## Troubleshooting
+## Troubleshooting & Key Features
 
-### MongoDB Atlas Connection Issues
+### 1. Automated Local Fallback Database (`local-db.json`)
+If you completely lose internet connection, or if your MongoDB Atlas instance goes offline, the system will **automatically and seamlessly fall back** to a shared local file database (`local-db.json` in the project root folder). 
+* When the MongoDB connection fails or times out, the applications will write and read contact messages and authenticate admin sessions locally.
+* Seeding for the local admin credentials is done automatically on fallback (Default: `admin@example.com` / `admin`).
+* Once the MongoDB connection becomes available again, simply restart the development servers to connect back to MongoDB Atlas.
 
-If you see an error like `MongooseServerSelectionError: Could not connect to any servers in your MongoDB Atlas cluster`, or if forms fail to submit with a generic error (e.g. `Something went wrong.`), it is likely because your current IP address is not whitelisted in MongoDB Atlas.
+### 2. Built-in Global DNS Resolver (Bypassing ISP/Router blocks)
+On some home or office routers, the default DNS server (`192.168.1.1`) fails to resolve MongoDB Atlas shard subdomains (throwing `MongooseServerSelectionError`). 
+* The system contains a **built-in DNS patch** that intercepts lookups for `.mongodb.net` domains and queries Google DNS (`8.8.8.8`) and Cloudflare DNS (`1.1.1.1`) directly.
+* This allows you to connect directly to MongoDB Atlas without changing your computer's network configuration!
 
-**To fix this:**
+### 3. MongoDB Atlas IP Whitelisting
+If you disable the wildcard `0.0.0.0/0` in MongoDB Atlas and want to whitelist your specific computer:
 1. Log into your [MongoDB Atlas Dashboard](https://cloud.mongodb.com/).
 2. Navigate to **Security** > **Network Access** in the left sidebar.
 3. Click **+ Add IP Address**.
-4. Choose **Add Current IP Address** and click **Confirm**.
-5. Wait for the status to turn "Active" and try again.
+4. Choose **Add Current IP Address** (or enter your public IP address) and click **Confirm**.
+5. Wait for the status to turn "Active" and reload your application.
+
